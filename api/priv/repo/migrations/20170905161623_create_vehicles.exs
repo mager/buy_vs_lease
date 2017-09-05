@@ -1,4 +1,4 @@
-defmodule BuyVsLease.Repo.Migrations.CreateVehicle do
+defmodule BuyVsLease.Repo.Migrations.CreateVehicles do
   use Ecto.Migration
 
   def change do
@@ -9,8 +9,10 @@ defmodule BuyVsLease.Repo.Migrations.CreateVehicle do
       add :two_yr_lease, :float
       add :three_yr_lease, :float
       add :msrp, :float
+      add :trim, :string
 
       timestamps()
     end
+
   end
 end

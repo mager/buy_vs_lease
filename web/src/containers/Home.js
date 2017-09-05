@@ -1,6 +1,16 @@
 // @flow
-import React from 'react';
+import React, { Component } from 'react';
 
-const Home = () => <div>Home</div>;
+import CarSearch from '../containers/CarSearch';
+
+class Home extends Component {
+  render() {
+    return (
+      <div className="Home">
+        <CarSearch />
+      </div>
+    );
+  }
+}
 
 export default Home;
