@@ -7,5 +7,7 @@ defmodule BuyVsLeaseWeb.Router do
 
   scope "/api", BuyVsLeaseWeb do
     pipe_through :api
+
+    resources "/vehicles", VehicleController
   end
 end
