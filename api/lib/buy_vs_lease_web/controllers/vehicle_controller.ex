@@ -6,12 +6,13 @@ defmodule BuyVsLeaseWeb.VehicleController do
 
   action_fallback BuyVsLeaseWeb.FallbackController
 
-  def index(conn, _params) do
+  def index(conn, params) do
     vehicles = Data.list_vehicles()
     render(conn, "index.json", vehicles: vehicles)
   end
 
-  def create(conn, %{"vehicle" => vehicle_params}) do
+  def create(conn, params) do
+    %{"vehicle" => vehicle_params} = params
     with {:ok, %Vehicle{} = vehicle} <- Data.create_vehicle(vehicle_params) do
       conn
       |> put_status(:created)
