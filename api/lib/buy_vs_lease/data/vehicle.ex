@@ -2,7 +2,7 @@ defmodule BuyVsLease.Data.Vehicle do
   use Ecto.Schema
   import Ecto.Changeset
   alias BuyVsLease.Data.Vehicle
-
+  require IEx
 
   schema "vehicles" do
     field :make, :string

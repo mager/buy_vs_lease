@@ -9,5 +9,6 @@ defmodule BuyVsLeaseWeb.Router do
     pipe_through :api
 
     resources "/vehicles", VehicleController
+    get "/search", VehicleController, :search
   end
 end

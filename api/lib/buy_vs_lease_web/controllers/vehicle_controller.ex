@@ -1,6 +1,8 @@
 defmodule BuyVsLeaseWeb.VehicleController do
   use BuyVsLeaseWeb, :controller
 
+  import Ecto.Query, only: [from: 2]
+
   alias BuyVsLease.Data
   alias BuyVsLease.Data.Vehicle
 
@@ -39,5 +41,17 @@ defmodule BuyVsLeaseWeb.VehicleController do
     with {:ok, %Vehicle{}} <- Data.delete_vehicle(vehicle) do
       send_resp(conn, :no_content, "")
     end
+  end
+
+  def search(conn, %{"year" => year, "make" => make, "model" => model}) do
+    query = from vehicle in BuyVsLease.Data.Vehicle,
+      select: vehicle,
+      where: vehicle.year == ^year,
+      where: ilike(vehicle.make, ^make),
+      where: ilike(vehicle.model, ^model)
+
+    vehicles = BuyVsLease.Repo.all(query)
+
+    render(conn, "search_results.json", vehicles: vehicles)
   end
 end

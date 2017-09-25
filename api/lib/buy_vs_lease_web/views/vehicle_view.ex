@@ -11,13 +11,19 @@ defmodule BuyVsLeaseWeb.VehicleView do
   end
 
   def render("vehicle.json", %{vehicle: vehicle}) do
-    %{id: vehicle.id,
+    %{
+      id: vehicle.id,
       make: vehicle.make,
       model: vehicle.model,
       year: vehicle.year,
       two_yr_lease: vehicle.two_yr_lease,
       three_yr_lease: vehicle.three_yr_lease,
       msrp: vehicle.msrp,
-      trim: vehicle.trim}
+      trim: vehicle.trim
+    }
+  end
+
+  def render("search_results.json", %{vehicles: vehicles}) do
+    %{data: render_many(vehicles, VehicleView, "vehicle.json")}
   end
 end
