@@ -36,6 +36,7 @@ defmodule BuyVsLeaseWeb.Endpoint do
     key: "_buy_vs_lease_key",
     signing_salt: "S2MgmHrZ"
 
+  plug CORSPlug
   plug BuyVsLeaseWeb.Router
 
   @doc """
