@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
+import classnames from 'classnames';
 
 import { fetchVehicles, fetchYears } from '../actions/search';
 
@@ -28,10 +29,15 @@ const TextField = props => {
 };
 
 const SelectField = props => {
+  const classes = classnames({
+    select: true,
+    'is-loading': props.years,
+  });
+
   return (
     <div className="field">
-      <div className="select">
-        <select {...props.input} className="select" name={props.name}>
+      <div className={classes}>
+        <select {...props.input} name={props.name}>
           {props.children}
         </select>
       </div>
