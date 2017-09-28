@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 import { reducer as form } from 'redux-form';
-import vehicles from './vehicles';
+import search from './search';
 
 const appReducer = combineReducers({
   form,
-  vehicles,
+  search,
 });
 
 export default function(state, action) {

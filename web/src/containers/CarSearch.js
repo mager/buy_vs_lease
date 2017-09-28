@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
 
-import { fetchVehicles } from '../actions/vehicles';
+import { fetchVehicles, fetchYears } from '../actions/search';
 
 const CarSearchForm = styled.form`
   display: grid;
@@ -27,10 +27,39 @@ const TextField = props => {
   );
 };
 
+const SelectField = props => {
+  return (
+    <div className="field">
+      <div className="select">
+        <select {...props.input} className="select" name={props.name}>
+          {props.children}
+        </select>
+      </div>
+    </div>
+  );
+};
+
 class CarSearch extends Component {
+  componentDidMount() {
+    const { fetchYears } = this.props;
+
+    fetchYears();
+  }
+
   handleSubmit = data => {
     this.props.fetchVehicles(data);
   };
+
+  renderYears() {
+    const { years } = this.props.search;
+    return years.length
+      ? years.map(year => (
+          <option name={year} key={year}>
+            {year}
+          </option>
+        ))
+      : null;
+  }
 
   render() {
     const { handleSubmit } = this.props;
@@ -40,12 +69,9 @@ class CarSearch extends Component {
         <h3 className="title">Search for a vehicle:</h3>
 
         <CarSearchForm onSubmit={handleSubmit(this.handleSubmit)}>
-          <Field
-            name="year"
-            component={TextField}
-            type="text"
-            placeholder="Year"
-          />
+          <Field name="year" component={SelectField} type="select">
+            {this.renderYears()}
+          </Field>
           <Field
             name="make"
             component={TextField}
@@ -67,7 +93,13 @@ class CarSearch extends Component {
   }
 }
 
-CarSearch = connect(undefined, { fetchVehicles })(CarSearch);
+const mapStateToProps = state => {
+  return {
+    search: state.search,
+  };
+};
+
+CarSearch = connect(mapStateToProps, { fetchVehicles, fetchYears })(CarSearch);
 
 export default reduxForm({
   form: 'CarSearch',
