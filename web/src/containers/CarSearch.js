@@ -72,7 +72,7 @@ class CarSearch extends Component {
 
     return (
       <section className="section CarSearch">
-        <h3 className="title">Search for a vehicle:</h3>
+        <h3 className="title">Should you buy or lease?</h3>
 
         <CarSearchForm onSubmit={handleSubmit(this.handleSubmit)}>
           <Field name="year" component={SelectField} type="select">
