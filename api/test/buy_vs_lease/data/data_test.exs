@@ -74,4 +74,68 @@ defmodule BuyVsLease.DataTest do
       assert %Ecto.Changeset{} = Data.change_vehicle(vehicle)
     end
   end
+
+  describe "analysis" do
+    alias BuyVsLease.Data.Analysis
+
+    @valid_attrs %{down_payment: 120.5, lease_term: 42, monthly_payment: 120.5}
+    @update_attrs %{down_payment: 456.7, lease_term: 43, monthly_payment: 456.7}
+    @invalid_attrs %{down_payment: nil, lease_term: nil, monthly_payment: nil}
+
+    def analysis_fixture(attrs \\ %{}) do
+      {:ok, analysis} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Data.create_analysis()
+
+      analysis
+    end
+
+    test "list_analysis/0 returns all analysis" do
+      analysis = analysis_fixture()
+      assert Data.list_analysis() == [analysis]
+    end
+
+    test "get_analysis!/1 returns the analysis with given id" do
+      analysis = analysis_fixture()
+      assert Data.get_analysis!(analysis.id) == analysis
+    end
+
+    test "create_analysis/1 with valid data creates a analysis" do
+      assert {:ok, %Analysis{} = analysis} = Data.create_analysis(@valid_attrs)
+      assert analysis.down_payment == 120.5
+      assert analysis.lease_term == 42
+      assert analysis.monthly_payment == 120.5
+    end
+
+    test "create_analysis/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Data.create_analysis(@invalid_attrs)
+    end
+
+    test "update_analysis/2 with valid data updates the analysis" do
+      analysis = analysis_fixture()
+      assert {:ok, analysis} = Data.update_analysis(analysis, @update_attrs)
+      assert %Analysis{} = analysis
+      assert analysis.down_payment == 456.7
+      assert analysis.lease_term == 43
+      assert analysis.monthly_payment == 456.7
+    end
+
+    test "update_analysis/2 with invalid data returns error changeset" do
+      analysis = analysis_fixture()
+      assert {:error, %Ecto.Changeset{}} = Data.update_analysis(analysis, @invalid_attrs)
+      assert analysis == Data.get_analysis!(analysis.id)
+    end
+
+    test "delete_analysis/1 deletes the analysis" do
+      analysis = analysis_fixture()
+      assert {:ok, %Analysis{}} = Data.delete_analysis(analysis)
+      assert_raise Ecto.NoResultsError, fn -> Data.get_analysis!(analysis.id) end
+    end
+
+    test "change_analysis/1 returns a analysis changeset" do
+      analysis = analysis_fixture()
+      assert %Ecto.Changeset{} = Data.change_analysis(analysis)
+    end
+  end
 end

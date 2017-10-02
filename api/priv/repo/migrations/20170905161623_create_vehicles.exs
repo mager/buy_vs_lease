@@ -10,7 +10,6 @@ defmodule BuyVsLease.Repo.Migrations.CreateVehicles do
       add :three_yr_lease, :float
       add :msrp, :float
       add :trim, :string
-
       timestamps()
     end
 

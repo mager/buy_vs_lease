@@ -42,5 +42,6 @@ yarn start
 #### Vehicle
 
 ```
-mix phoenix.gen.json Vehicle vehicles make:string model:string year:integer two_yr_lease:float three_yr_lease:float msrp:float
+mix phx.gen.json Data Vehicle vehicles make:string model:string year:integer two_yr_lease:float three_yr_lease:float msrp:float
+mix phx.gen.json Data Analysis analysis vehicle_id:references:vehicles down_payment:float monthly_payment:float lease_term:integer
 ```

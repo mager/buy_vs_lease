@@ -1,31 +1,7 @@
 import React, { Component } from 'react';
-import { Field, FieldArray } from 'redux-form';
+import { Field } from 'redux-form';
 
 import TextField from '../components/TextField';
-
-const RadioFields = ({ fields }) => {
-  const choices = fields.map(field => {
-    console.log(field);
-    return <Field name={field} component={RadioField} label={field} />;
-  });
-
-  // const choices = (
-  //   <div className="control">
-  //     <Field component={RadioField} label="24 Month" />
-  //     <Field component={RadioField} label="36 Month" />
-  //   </div>
-  // );
-  return <div className="control">{choices}</div>;
-};
-
-const RadioField = props => {
-  return (
-    <label className="radio">
-      <input type="radio" name={props.input.name} />
-      {props.label}
-    </label>
-  );
-};
 
 class LeaseInfo extends Component {
   render() {
@@ -38,11 +14,14 @@ class LeaseInfo extends Component {
           component={TextField}
           label="Monthly Payment"
         />
-        <FieldArray
-          name="leaseTerm"
-          component={RadioFields}
-          label="Lease Term"
-        />
+        <label className="radio">
+          <Field name="leaseTerm" component="input" type="radio" value="24" />24
+          month
+        </label>
+        <label className="radio">
+          <Field name="leaseTerm" component="input" type="radio" value="36" />
+          36 month
+        </label>
       </section>
     );
   }
