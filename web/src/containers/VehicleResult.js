@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-class SearchResults extends Component {
-  renderSearchResults() {
+class VehicleResult extends Component {
+  renderVehicleResult() {
     const { search: { vehicle } } = this.props;
 
     if (vehicle) {
@@ -15,8 +15,8 @@ class SearchResults extends Component {
 
   render() {
     return (
-      <section className="section SearchResults">
-        <p>{this.renderSearchResults()}</p>
+      <section className="section VehicleResult">
+        <p>{this.renderVehicleResult()}</p>
       </section>
     );
   }
@@ -26,4 +26,4 @@ const mapStateToProps = state => ({
   search: state.search,
 });
 
-export default connect(mapStateToProps, undefined)(SearchResults);
+export default connect(mapStateToProps, undefined)(VehicleResult);

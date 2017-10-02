@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { reduxForm, Field, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
-import classnames from 'classnames';
 
 import {
   fetchVehicle,
@@ -10,45 +9,9 @@ import {
   fetchMakes,
   fetchModels,
 } from '../actions/search';
-import SearchResults from './SearchResults';
-
-const CarSearchForm = styled.form`
-  display: flex;
-  justify-content: space-between;
-`;
-
-const TextField = props => {
-  return (
-    <div className="field">
-      <div className="control">
-        <input
-          {...props.input}
-          className="input"
-          type="text"
-          placeholder={props.placeholder}
-          name={props.name}
-        />
-      </div>
-    </div>
-  );
-};
-
-const SelectField = props => {
-  const classes = classnames({
-    select: true,
-    'is-loading': props.years,
-  });
-
-  return (
-    <div className="field">
-      <div className={classes}>
-        <select {...props.input} name={props.name}>
-          {props.children}
-        </select>
-      </div>
-    </div>
-  );
-};
+import VehicleResult from './VehicleResult';
+import LeaseInfo from './LeaseInfo';
+import SelectField from '../components/SelectField';
 
 class CarSearch extends Component {
   async componentDidMount() {
@@ -126,53 +89,65 @@ class CarSearch extends Component {
   render() {
     return (
       <section className="section CarSearch">
-        <h3 className="title">Should you buy or lease?</h3>
+        <h3 className="title">buyvslease.com</h3>
 
-        <CarSearchForm>
-          <Field
-            name="year"
-            component={SelectField}
-            type="select"
-            onChange={this.onUpdateYear}
-          >
-            <option value="Choose a year" selected="selected">
-              Choose a Year
-            </option>
-            {this.renderYears()}
-          </Field>
-          <Field
-            name="make"
-            component={SelectField}
-            type="select"
-            onChange={this.onUpdateMake}
-          >
-            <option value="Choose a make" selected="selected">
-              Choose a make
-            </option>
-            {this.renderMakes()}
-          </Field>
-          <Field
-            name="model"
-            component={SelectField}
-            type="select"
-            onChange={this.onUpdateModel}
-          >
-            <option value="Choose a model" selected="selected">
-              Choose a model
-            </option>
-            {this.renderModels()}
-          </Field>
-        </CarSearchForm>
-        <SearchResults />
+        <h5 className="title">Select Your Vehicle</h5>
+        <div className="columns">
+          <div className="column">
+            <Field
+              name="year"
+              component={SelectField}
+              type="select"
+              onChange={this.onUpdateYear}
+            >
+              <option value="Choose a year" selected="selected">
+                Choose a Year
+              </option>
+              {this.renderYears()}
+            </Field>
+          </div>
+          <div className="column">
+            <Field
+              name="make"
+              component={SelectField}
+              type="select"
+              onChange={this.onUpdateMake}
+            >
+              <option value="Choose a make" selected="selected">
+                Choose a make
+              </option>
+              {this.renderMakes()}
+            </Field>
+          </div>
+          <div className="column">
+            <Field
+              name="model"
+              component={SelectField}
+              type="select"
+              disabled
+              onChange={this.onUpdateModel}
+            >
+              <option value="Choose a model" selected="selected">
+                Choose a model
+              </option>
+              {this.renderModels()}
+            </Field>
+          </div>
+        </div>
+        <VehicleResult />
+        <LeaseInfo />
       </section>
     );
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   const selector = formValueSelector('CarSearch');
 
   return {
+    initialValues: {
+      leaseTerm: ['24 month', '36 month'],
+    },
     search: state.search,
     currentYear: selector(state, 'year') || 2017,
     currentMake: selector(state, 'make') || 'Nissan',
