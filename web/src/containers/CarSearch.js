@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { reduxForm, Field } from 'redux-form';
+import { reduxForm, Field, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 
-import { fetchVehicles, fetchYears } from '../actions/search';
+import { fetchVehicles, fetchYears, fetchMakes } from '../actions/search';
 
 const CarSearchForm = styled.form`
   display: grid;
-  grid-template-columns: 10% 20% auto 10%;
+  grid-template-columns: 100px auto auto 10%;
   grid-column-gap: 10px;
 `;
 
@@ -46,14 +46,24 @@ const SelectField = props => {
 };
 
 class CarSearch extends Component {
-  componentDidMount() {
-    const { fetchYears } = this.props;
+  async componentDidMount() {
+    const { fetchYears, fetchMakes } = this.props;
 
-    fetchYears();
+    await fetchYears();
+
+    /* TODO(mager): Use current year */
+    await fetchMakes(2017);
   }
 
   handleSubmit = data => {
     this.props.fetchVehicles(data);
+  };
+
+  onUpdateYear = async event => {
+    const { fetchMakes } = this.props;
+    const currentYear = event.target.value;
+
+    await fetchMakes(currentYear);
   };
 
   renderYears() {
@@ -67,6 +77,21 @@ class CarSearch extends Component {
       : null;
   }
 
+  renderMakes() {
+    const { search } = this.props;
+    const makes = search.makes;
+
+    if (makes) {
+      return makes.map(make => (
+        <option name={make} key={make}>
+          {make}
+        </option>
+      ));
+    }
+
+    return undefined;
+  }
+
   render() {
     const { handleSubmit } = this.props;
 
@@ -75,15 +100,17 @@ class CarSearch extends Component {
         <h3 className="title">Should you buy or lease?</h3>
 
         <CarSearchForm onSubmit={handleSubmit(this.handleSubmit)}>
-          <Field name="year" component={SelectField} type="select">
+          <Field
+            name="year"
+            component={SelectField}
+            type="select"
+            onChange={this.onUpdateYear}
+          >
             {this.renderYears()}
           </Field>
-          <Field
-            name="make"
-            component={TextField}
-            type="text"
-            placeholder="Make"
-          />
+          <Field name="make" component={SelectField} type="select">
+            {this.renderMakes()}
+          </Field>
           <Field
             name="model"
             component={TextField}
@@ -100,12 +127,17 @@ class CarSearch extends Component {
 }
 
 const mapStateToProps = state => {
+  const selector = formValueSelector('CarSearch');
+
   return {
     search: state.search,
+    currentYear: selector(state, 'year'),
   };
 };
 
-CarSearch = connect(mapStateToProps, { fetchVehicles, fetchYears })(CarSearch);
+CarSearch = connect(mapStateToProps, { fetchVehicles, fetchYears, fetchMakes })(
+  CarSearch,
+);
 
 export default reduxForm({
   form: 'CarSearch',

@@ -27,3 +27,12 @@ export const fetchYears = () => async dispatch => {
     years: data.years,
   });
 };
+
+export const fetchMakes = year => async dispatch => {
+  const { data } = await axios.get(`${API_URL}/makes?year=${year}`);
+
+  dispatch({
+    type: 'FETCH_MAKES_SUCCESS',
+    makes: data.makes,
+  });
+};

@@ -30,4 +30,8 @@ defmodule BuyVsLeaseWeb.VehicleView do
   def render("years.json", %{years: years}) do
     %{years: years}
   end
+
+  def render("makes.json", %{makes: makes}) do
+    %{makes: makes}
+  end
 end

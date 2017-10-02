@@ -11,5 +11,6 @@ defmodule BuyVsLeaseWeb.Router do
     resources "/vehicles", VehicleController
     get "/search", VehicleController, :search
     get "/years", VehicleController, :search_years
+    get "/makes", VehicleController, :search_makes
   end
 end

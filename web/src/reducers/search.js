@@ -10,6 +10,11 @@ export default function(
         ...state,
         years: action.years,
       };
+    case 'FETCH_MAKES_SUCCESS':
+      return {
+        ...state,
+        makes: action.makes,
+      };
     default:
       return state;
   }
