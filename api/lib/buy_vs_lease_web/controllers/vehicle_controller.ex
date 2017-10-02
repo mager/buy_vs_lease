@@ -55,14 +55,14 @@ defmodule BuyVsLeaseWeb.VehicleController do
     render(conn, "search_results.json", vehicles: vehicles)
   end
 
-  def search_years(conn, _params) do
+  def fetch_years(conn, _params) do
     query = from(v in Vehicle, distinct: true, select: v.year)
     years = BuyVsLease.Repo.all(query)
 
     render(conn, "years.json", years: years)
   end
 
-  def search_makes(conn, %{"year" => year}) do
+  def fetch_makes(conn, %{"year" => year}) do
     query = from(
       v in Vehicle, distinct: true, select: v.make, where: v.year == ^year
     )
@@ -71,7 +71,7 @@ defmodule BuyVsLeaseWeb.VehicleController do
     render(conn, "makes.json", makes: makes)
   end
 
-  def search_models(conn, %{"year" => year, "make" => make}) do
+  def fetch_models(conn, %{"year" => year, "make" => make}) do
     query = from(
       v in Vehicle,
       select: v.model,

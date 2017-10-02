@@ -73,7 +73,6 @@ class CarSearch extends Component {
   renderModels() {
     const { search } = this.props;
     const models = search.models;
-    console.log(models);
 
     if (models) {
       return models.map(model => (
@@ -91,49 +90,52 @@ class CarSearch extends Component {
       <section className="section CarSearch">
         <h3 className="title">buyvslease.com</h3>
 
-        <h5 className="title">Select Your Vehicle</h5>
-        <div className="columns">
-          <div className="column">
-            <Field
-              name="year"
-              component={SelectField}
-              type="select"
-              onChange={this.onUpdateYear}
-            >
-              <option value="Choose a year" selected="selected">
-                Choose a Year
-              </option>
-              {this.renderYears()}
-            </Field>
+        <section className="section">
+          <h5 className="title">Select Your Vehicle</h5>
+          <div className="columns">
+            <div className="column">
+              <Field
+                name="year"
+                component={SelectField}
+                type="select"
+                onChange={this.onUpdateYear}
+              >
+                <option value="Choose a year" selected="selected">
+                  Choose a Year
+                </option>
+                {this.renderYears()}
+              </Field>
+            </div>
+            <div className="column">
+              <Field
+                name="make"
+                component={SelectField}
+                type="select"
+                onChange={this.onUpdateMake}
+              >
+                <option value="Choose a make" selected="selected">
+                  Choose a make
+                </option>
+                {this.renderMakes()}
+              </Field>
+            </div>
+            <div className="column">
+              <Field
+                name="model"
+                component={SelectField}
+                type="select"
+                disabled
+                onChange={this.onUpdateModel}
+              >
+                <option value="Choose a model" selected="selected">
+                  Choose a model
+                </option>
+                {this.renderModels()}
+              </Field>
+            </div>
           </div>
-          <div className="column">
-            <Field
-              name="make"
-              component={SelectField}
-              type="select"
-              onChange={this.onUpdateMake}
-            >
-              <option value="Choose a make" selected="selected">
-                Choose a make
-              </option>
-              {this.renderMakes()}
-            </Field>
-          </div>
-          <div className="column">
-            <Field
-              name="model"
-              component={SelectField}
-              type="select"
-              disabled
-              onChange={this.onUpdateModel}
-            >
-              <option value="Choose a model" selected="selected">
-                Choose a model
-              </option>
-              {this.renderModels()}
-            </Field>
-          </div>
-        </div>
+        </section>
+
         <VehicleResult />
         <LeaseInfo />
       </section>

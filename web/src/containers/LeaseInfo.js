@@ -31,6 +31,7 @@ class LeaseInfo extends Component {
   render() {
     return (
       <section className="section LeaseInfo">
+        <h5 className="title">Tell us about your current lease</h5>
         <Field name="downPayment" component={TextField} label="Down Payment" />
         <Field
           name="monthlyPayment"
