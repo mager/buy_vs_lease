@@ -70,4 +70,16 @@ defmodule BuyVsLeaseWeb.VehicleController do
     makes = BuyVsLease.Repo.all(query)
     render(conn, "makes.json", makes: makes)
   end
+
+  def search_models(conn, %{"year" => year, "make" => make}) do
+    query = from(
+      v in Vehicle,
+      select: v.model,
+      where: v.year == ^year,
+      where: v.make == ^make,
+    )
+
+    models = BuyVsLease.Repo.all(query)
+    render(conn, "models.json", models: models)
+  end
 end

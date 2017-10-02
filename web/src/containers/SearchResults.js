@@ -3,13 +3,11 @@ import { connect } from 'react-redux';
 
 class SearchResults extends Component {
   renderSearchResults() {
-    const { vehicles } = this.props;
+    const { search: { vehicle } } = this.props;
 
-    if (vehicles.length) {
-      return vehicles.map(({ id, year, make, model, trim }) => {
-        const fullName = `${year} ${make} ${model} ${trim}`;
-        return <div key={id}>{fullName}</div>;
-      });
+    if (vehicle) {
+      const { id, year, make, model } = vehicle;
+      return `You selected ${id} ${year} ${make} ${model}`;
     }
 
     return undefined;
@@ -18,14 +16,14 @@ class SearchResults extends Component {
   render() {
     return (
       <section className="section SearchResults">
-        {this.renderSearchResults()}
+        <p>{this.renderSearchResults()}</p>
       </section>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  vehicles: state.vehicles,
+  search: state.search,
 });
 
 export default connect(mapStateToProps, undefined)(SearchResults);

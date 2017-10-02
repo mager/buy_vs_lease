@@ -4,12 +4,17 @@ import { reduxForm, Field, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 
-import { fetchVehicles, fetchYears, fetchMakes } from '../actions/search';
+import {
+  fetchVehicle,
+  fetchYears,
+  fetchMakes,
+  fetchModels,
+} from '../actions/search';
+import SearchResults from './SearchResults';
 
 const CarSearchForm = styled.form`
-  display: grid;
-  grid-template-columns: 100px auto auto 10%;
-  grid-column-gap: 10px;
+  display: flex;
+  justify-content: space-between;
 `;
 
 const TextField = props => {
@@ -51,19 +56,29 @@ class CarSearch extends Component {
 
     await fetchYears();
 
-    /* TODO(mager): Use current year */
+    /* TODO(mager): Don't hard-code current year */
     await fetchMakes(2017);
   }
-
-  handleSubmit = data => {
-    this.props.fetchVehicles(data);
-  };
 
   onUpdateYear = async event => {
     const { fetchMakes } = this.props;
     const currentYear = event.target.value;
 
     await fetchMakes(currentYear);
+  };
+
+  onUpdateMake = async event => {
+    const { fetchModels, currentYear } = this.props;
+    const currentMake = event.target.value;
+
+    await fetchModels(currentYear, currentMake);
+  };
+
+  onUpdateModel = async event => {
+    const { fetchVehicle, currentYear, currentMake } = this.props;
+    const currentModel = event.target.value;
+
+    await fetchVehicle(currentYear, currentMake, currentModel);
   };
 
   renderYears() {
@@ -92,35 +107,63 @@ class CarSearch extends Component {
     return undefined;
   }
 
-  render() {
-    const { handleSubmit } = this.props;
+  renderModels() {
+    const { search } = this.props;
+    const models = search.models;
+    console.log(models);
 
+    if (models) {
+      return models.map(model => (
+        <option name={model} key={model}>
+          {model}
+        </option>
+      ));
+    }
+
+    return undefined;
+  }
+
+  render() {
     return (
       <section className="section CarSearch">
         <h3 className="title">Should you buy or lease?</h3>
 
-        <CarSearchForm onSubmit={handleSubmit(this.handleSubmit)}>
+        <CarSearchForm>
           <Field
             name="year"
             component={SelectField}
             type="select"
             onChange={this.onUpdateYear}
           >
+            <option value="Choose a year" selected="selected">
+              Choose a Year
+            </option>
             {this.renderYears()}
           </Field>
-          <Field name="make" component={SelectField} type="select">
+          <Field
+            name="make"
+            component={SelectField}
+            type="select"
+            onChange={this.onUpdateMake}
+          >
+            <option value="Choose a make" selected="selected">
+              Choose a make
+            </option>
             {this.renderMakes()}
           </Field>
           <Field
             name="model"
-            component={TextField}
-            type="text"
-            placeholder="Model"
-          />
-          <button className="button" type="submit">
-            Search
-          </button>
+            component={SelectField}
+            type="select"
+            onChange={this.onUpdateModel}
+          >
+            <option value="Choose a model" selected="selected">
+              Choose a model
+            </option>
+            {this.renderModels()}
+          </Field>
         </CarSearchForm>
+        <SearchResults />
       </section>
     );
   }
@@ -131,13 +174,18 @@ const mapStateToProps = state => {
 
   return {
     search: state.search,
-    currentYear: selector(state, 'year'),
+    currentYear: selector(state, 'year') || 2017,
+    currentMake: selector(state, 'make') || 'Nissan',
+    currentModel: selector(state, 'model'),
   };
 };
 
-CarSearch = connect(mapStateToProps, { fetchVehicles, fetchYears, fetchMakes })(
-  CarSearch,
-);
+CarSearch = connect(mapStateToProps, {
+  fetchVehicle,
+  fetchYears,
+  fetchMakes,
+  fetchModels,
+})(CarSearch);
 
 export default reduxForm({
   form: 'CarSearch',
