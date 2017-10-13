@@ -14,6 +14,8 @@ defmodule BuyVsLeaseWeb.AnalysisView do
     %{id: analysis.id,
       down_payment: analysis.down_payment,
       monthly_payment: analysis.monthly_payment,
-      lease_term: analysis.lease_term}
+      lease_term: analysis.lease_term,
+      result: analysis.result,
+    }
   end
 end

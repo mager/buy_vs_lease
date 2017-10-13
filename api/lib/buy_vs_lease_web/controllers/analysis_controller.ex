@@ -3,6 +3,7 @@ defmodule BuyVsLeaseWeb.AnalysisController do
 
   alias BuyVsLease.Data
   alias BuyVsLease.Data.Analysis
+  alias BuyVsLease.Data.Vehicle
 
   action_fallback BuyVsLeaseWeb.FallbackController
 
@@ -12,7 +13,10 @@ defmodule BuyVsLeaseWeb.AnalysisController do
   end
 
   def create(conn, %{"analysis" => analysis_params}) do
-    with {:ok, %Analysis{} = analysis} <- Data.create_analysis(analysis_params) do
+    # Decide if they should buy or lease
+    result = analyze_input(analysis_params)
+
+    with {:ok, %Analysis{} = analysis} <- Data.create_analysis(Map.merge(analysis_params, result)) do
       conn
       |> put_status(:created)
       |> put_resp_header("location", analysis_path(conn, :show, analysis))
@@ -38,5 +42,28 @@ defmodule BuyVsLeaseWeb.AnalysisController do
     with {:ok, %Analysis{}} <- Data.delete_analysis(analysis) do
       send_resp(conn, :no_content, "")
     end
+  end
+
+  defp analyze_input(%{
+    "id" => id,
+    "lease_term" => lease_term,
+    "down_payment" => down_payment,
+    "monthly_payment" => monthly_payment
+  } = analysis_params) do
+    # Get the 2 or 3 year lease value
+    vehicle = Vehicle |> BuyVsLease.Repo.get_by(id: id)
+    lease_value = case (lease_term) do
+      24 -> vehicle.two_yr_lease
+      36 -> vehicle.three_yr_lease
+    end
+
+    # Get amount = down payment + (montlhy payment * term)
+    dues = down_payment + (monthly_payment * lease_term)
+    result = cond do
+      dues < lease_value -> "buy"
+      dues > lease_value -> "lease"
+    end
+
+    %{"result" => result}
   end
 end

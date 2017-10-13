@@ -9,6 +9,7 @@ defmodule BuyVsLease.Data.Analysis do
     field :lease_term, :integer
     field :monthly_payment, :float
     field :vehicle_id, :id
+    field :result, :string
 
     timestamps()
   end
@@ -16,7 +17,7 @@ defmodule BuyVsLease.Data.Analysis do
   @doc false
   def changeset(%Analysis{} = analysis, attrs) do
     analysis
-    |> cast(attrs, [:down_payment, :monthly_payment, :lease_term])
-    |> validate_required([:down_payment, :monthly_payment, :lease_term])
+    |> cast(attrs, [:down_payment, :monthly_payment, :lease_term, :result])
+    |> validate_required([:down_payment, :monthly_payment, :lease_term, :result])
   end
 end
