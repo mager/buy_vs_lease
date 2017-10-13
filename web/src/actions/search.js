@@ -50,3 +50,14 @@ export const fetchModels = (year, make) => async dispatch => {
     models: data.models,
   });
 };
+
+export const createAnalysis = data => async dispatch => {
+  const response = await axios.post(`${API_URL}/analysis`, { analysis: data });
+
+  console.log(response);
+
+  // dispatch({
+  //   type: 'FETCH_MODELS_SUCCESS',
+  //   models: data.models,
+  // });
+};

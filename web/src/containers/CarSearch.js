@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
-import { reduxForm, Field, formValueSelector } from 'redux-form';
+import {
+  reduxForm,
+  Field,
+  formValueSelector,
+  SubmissionError,
+} from 'redux-form';
 import { connect } from 'react-redux';
 
 import {
@@ -8,6 +12,7 @@ import {
   fetchYears,
   fetchMakes,
   fetchModels,
+  createAnalysis,
 } from '../actions/search';
 import VehicleResult from './VehicleResult';
 import LeaseInfo from './LeaseInfo';
@@ -84,60 +89,89 @@ class CarSearch extends Component {
 
     return undefined;
   }
+  handleSubmit = ({ downPayment, leaseTerm, monthlyPayment }) => {
+    const vehicle = this.props.search.vehicle;
+
+    if (!vehicle) {
+      throw new SubmissionError({
+        model: 'Must select a vehicle',
+        _error: 'Submit failed!',
+      });
+    }
+
+    const updatedData = {
+      id: this.props.search.vehicle.id,
+      down_payment: parseInt(downPayment, 0),
+      lease_term: parseInt(leaseTerm, 24),
+      monthly_payment: parseInt(monthlyPayment, 0),
+    };
+
+    this.props.createAnalysis(updatedData);
+  };
 
   render() {
     return (
       <section className="section CarSearch">
-        <h3 className="title">buyvslease.com</h3>
+        <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
+          <h3 className="title">buyvslease.com</h3>
 
-        <section className="section">
-          <h5 className="title">Select Your Vehicle</h5>
-          <div className="columns">
-            <div className="column">
-              <Field
-                name="year"
-                component={SelectField}
-                type="select"
-                onChange={this.onUpdateYear}
-              >
-                <option value="Choose a year" selected="selected">
-                  Choose a Year
-                </option>
-                {this.renderYears()}
-              </Field>
+          <section className="section">
+            <h5 className="title">Select Your Vehicle</h5>
+            <div className="columns">
+              <div className="column">
+                <Field
+                  name="year"
+                  component={SelectField}
+                  type="select"
+                  onChange={this.onUpdateYear}
+                >
+                  <option value="Choose a year" selected="selected">
+                    Choose a Year
+                  </option>
+                  {this.renderYears()}
+                </Field>
+              </div>
+              <div className="column">
+                <Field
+                  name="make"
+                  component={SelectField}
+                  type="select"
+                  onChange={this.onUpdateMake}
+                >
+                  <option value="Choose a make" selected="selected">
+                    Choose a make
+                  </option>
+                  {this.renderMakes()}
+                </Field>
+              </div>
+              <div className="column">
+                <Field
+                  name="model"
+                  component={SelectField}
+                  type="select"
+                  disabled
+                  onChange={this.onUpdateModel}
+                >
+                  <option value="Choose a model" selected="selected">
+                    Choose a model
+                  </option>
+                  {this.renderModels()}
+                </Field>
+              </div>
             </div>
-            <div className="column">
-              <Field
-                name="make"
-                component={SelectField}
-                type="select"
-                onChange={this.onUpdateMake}
-              >
-                <option value="Choose a make" selected="selected">
-                  Choose a make
-                </option>
-                {this.renderMakes()}
-              </Field>
-            </div>
-            <div className="column">
-              <Field
-                name="model"
-                component={SelectField}
-                type="select"
-                disabled
-                onChange={this.onUpdateModel}
-              >
-                <option value="Choose a model" selected="selected">
-                  Choose a model
-                </option>
-                {this.renderModels()}
-              </Field>
-            </div>
-          </div>
-        </section>
+          </section>
 
-        <VehicleResult />
-        <LeaseInfo />
+          <VehicleResult />
+          <LeaseInfo />
+          <section className="section submit">
+            <input
+              className="button"
+              type="submit"
+              value="Submit"
+              disabled={!this.props.search.vehicle}
+            />
+          </section>
+        </form>
       </section>
     );
   }
@@ -162,6 +196,7 @@ CarSearch = connect(mapStateToProps, {
   fetchYears,
   fetchMakes,
   fetchModels,
+  createAnalysis,
 })(CarSearch);
 
 export default reduxForm({
