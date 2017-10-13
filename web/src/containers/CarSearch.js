@@ -101,9 +101,9 @@ class CarSearch extends Component {
 
     const updatedData = {
       id: this.props.search.vehicle.id,
-      down_payment: parseInt(downPayment, 0),
-      lease_term: parseInt(leaseTerm, 24),
-      monthly_payment: parseInt(monthlyPayment, 0),
+      down_payment: parseInt(downPayment, 10),
+      lease_term: parseInt(leaseTerm, 10),
+      monthly_payment: parseInt(monthlyPayment, 10),
     };
 
     this.props.createAnalysis(updatedData);
@@ -172,6 +172,7 @@ class CarSearch extends Component {
             />
           </section>
         </form>
+        <section className="result">{this.props.result}</section>
       </section>
     );
   }
@@ -188,6 +189,7 @@ const mapStateToProps = (state, ownProps) => {
     currentYear: selector(state, 'year') || 2017,
     currentMake: selector(state, 'make') || 'Nissan',
     currentModel: selector(state, 'model'),
+    result: state.result,
   };
 };
 
